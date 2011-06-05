@@ -141,11 +141,12 @@ struct gpio {
 /* base address for indirect vectors (internal boot mode) */
 #define SRAM_OFFSET0			0x40000000
 #define SRAM_OFFSET1			0x00200000
-#define SRAM_OFFSET2			0x0000F800
+#define SRAM_OFFSET2			0x0000FF00
+#define SRAM_OFFSET3			0x000000C8
 #define SRAM_VECT_CODE			(SRAM_OFFSET0 | SRAM_OFFSET1 | \
-					 SRAM_OFFSET2)
+					 SRAM_OFFSET2 | SRAM_OFFSET3)
 
-#define LOW_LEVEL_SRAM_STACK		0x4020FFFC
+#define LOW_LEVEL_SRAM_STACK		0x4020FCAC
 
 #define DEBUG_LED1			149	/* gpio */
 #define DEBUG_LED2			150	/* gpio */

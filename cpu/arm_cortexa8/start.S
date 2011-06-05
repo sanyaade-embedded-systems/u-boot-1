@@ -105,30 +105,39 @@ reset:
 	 */
 	mrs	r0, cpsr
 	bic	r0, r0, #0x1f
-	orr	r0, r0, #0xd3
-	msr	cpsr,r0
+	orr	r0, r0, #0x13
+	msr	cpsr_cf, r0
 
 #if (CONFIG_OMAP34XX)
 	/* Copy vectors to mask ROM indirect addr */
 	adr	r0, _start		@ r0 <- current position of code
 	add	r0, r0, #4		@ skip reset vector
-	mov	r2, #64			@ r2 <- size to copy
-	add	r2, r0, r2		@ r2 <- source end address
+	mov	r2, #0xE
 	mov	r1, #SRAM_OFFSET0	@ build vect addr
 	mov	r3, #SRAM_OFFSET1
 	add	r1, r1, r3
 	mov	r3, #SRAM_OFFSET2
 	add	r1, r1, r3
+	mov	r3, #SRAM_OFFSET3
+	add r1, r1, r3
 next:
-	ldmia	r0!, {r3 - r10}		@ copy from source address [r0]
-	stmia	r1!, {r3 - r10}		@ copy to   target address [r1]
-	cmp	r0, r2			@ until source end address [r2]
-	bne	next			@ loop until equal */
+	ldr r3, [r0]
+	str r3, [r1]
+	add r0, r0, #0x4
+	add r1, r1, #0x4
+	sub r2, r2, #0x1
+	cmp	r2, #0x0
+	bne	next
+	mov r1, #SRAM_OFFSET0
+	mov r3, #SRAM_OFFSET1
+	add r1, r1, r3
+	mov r3, #0xf800
+	add r1, r1, r3
 #if !defined(CONFIG_SYS_NAND_BOOT) && !defined(CONFIG_SYS_ONENAND_BOOT)
 	/* No need to copy/exec the clock code - DPLL adjust already done
 	 * in NAND/oneNAND Boot.
 	 */
-	bl	cpy_clk_code		@ put dpll adjust code behind vectors
+	bl	cpy_clk_code		@ put dpll adjust code behind vectors/
 #endif /* NAND Boot */
 #endif
 	/* the mask ROM code should have PLL and others stable */
