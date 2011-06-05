@@ -20,7 +20,7 @@ if head=`git rev-parse --verify HEAD 2>/dev/null`; then
 	git update-index --refresh --unmerged > /dev/null
 	if git diff-index --name-only HEAD | grep -v "^scripts/package" \
 	    | read dummy; then
-		printf '%s' -dirty
+		printf '%s' -dirty-markos-beagleC4
 	fi
 
 	# Is this git on svn?
